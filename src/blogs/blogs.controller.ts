@@ -16,7 +16,7 @@ import {
   Res,
   UseInterceptors,
 } from '@nestjs/common'
-import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { randomUUID } from 'crypto'
 import { Request, Response } from 'express'
 import { REQUEST_ID_HEADER } from 'src/shared/constants'
@@ -27,6 +27,7 @@ import { PaginatedBlogsResponseDto } from './dto/paginated-blogs-response.dto'
 import { RequestIdInterceptor } from 'src/shared/interceptors/request-id.interceptor'
 
 @ApiTags('Blogs')
+@ApiBearerAuth('JWT-auth')
 @UseInterceptors(RequestIdInterceptor)
 @Controller('v1/blogs')
 export class BlogsController {

@@ -5,9 +5,11 @@ import { BlogsService } from './blogs.service';
 import { BlogsController } from './blogs.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([
-    Blog
-  ])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Blog
+    ])
+  ],
   providers: [BlogsService],
   controllers: [BlogsController]
 })
