@@ -1,4 +1,4 @@
-import { BlogId } from 'src/types/common.type';
+import { BlogId, UserId } from 'src/types/common.type';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('blog')
@@ -11,6 +11,9 @@ export class Blog {
 
   @Column()
   description: string;
+
+  @Column()
+  createdBy: UserId
 
   @CreateDateColumn({
     type: 'timestamp'

@@ -37,12 +37,7 @@ export class BlogsController {
   private readonly logger: Logger = new Logger(BlogsController.name)
   constructor(
     private readonly blogsSerivce: BlogsService,
-  ) {
-    this.logger.log({
-      method: 'constructor',
-      message: 'BlogsController initialization',
-    })
-  }
+  ) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
@@ -163,12 +158,12 @@ export class BlogsController {
     type: EntityCreated,
   })
   async createBlog(
-    @Req() req: Request & { requestId: string },
+    @Req() req: Request & AuthorizedCommonRequest,
     @Res() res: Response,
     @Body() blogRequestDto: BlogRequestDto
   ) {
     let requestId = req.requestId
-    const id = await this.blogsSerivce.createBlog(blogRequestDto, requestId)
+    const id = await this.blogsSerivce.createBlog(blogRequestDto, req.user.id, requestId)
     res.status(HttpStatus.CREATED).json({
       id
     })

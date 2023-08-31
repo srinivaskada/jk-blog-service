@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Blog } from './entities/blog.entity';
 import { BlogRequestDto } from './dto/blog-request.dto';
-import { BlogId } from 'src/types/common.type';
+import { BlogId, UserId } from 'src/types/common.type';
 
 @Injectable()
 export class BlogsService {
@@ -40,10 +40,11 @@ export class BlogsService {
     })
   }
 
-  async createBlog(blog: BlogRequestDto, requestId: string) {
+  async createBlog(blog: BlogRequestDto, createdBy: UserId, requestId: string) {
     const result = await this.blogsRepository.insert({
       title: blog.title,
       description: blog.description,
+      createdBy
     })
     this.logger.log('New blog created successfully', {
       requestId,
