@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Max } from "class-validator";
 
 export abstract class PaginatedDto<DType> {
   @ApiProperty({
@@ -18,8 +19,10 @@ export abstract class PaginatedDto<DType> {
   @ApiProperty({
     description: 'The number of items per page',
     minimum: 0,
+    maximum: 200,
     example: 50
   })
+  @Max(1000)
   limit: number;
 
   abstract data: DType[]
