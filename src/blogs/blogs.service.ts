@@ -31,8 +31,14 @@ export class BlogsService {
     });
   }
 
-  countAll(): Promise<number> {
-    return this.blogsRepository.count()
+  countAll({
+    createdBy
+  }: { createdBy: number}): Promise<number> {
+    return this.blogsRepository.count({
+      where: {
+        createdBy
+      }
+    })
   }
 
   findByTitle(title: string): Promise<Blog> {
@@ -52,16 +58,36 @@ export class BlogsService {
   }
 
   async createBlog(blog: BlogRequestDto, createdBy: UserId, requestId: string) {
-    const result = await this.blogsRepository.insert({
+    const newBlog = this.blogsRepository.create({
       title: blog.title,
       description: blog.description,
       createdBy
     })
+    await this.blogsRepository.save(newBlog)
     this.logger.log('New blog created successfully', {
       requestId,
       blog,
-      result
+      newBlog
     })
-    return result.identifiers[0].id as number
+    return newBlog
+  }
+
+  updateBlog(blogId: BlogId, blog: Partial<Blog>) {
+    return this.blogsRepository
+      .createQueryBuilder()
+      .update({
+        title: blog.title,
+        description: blog.description
+      } as Partial<Blog>)
+      .where("id = :id", { id: blogId })
+      .execute()
+  }
+
+  deleteBlog(blogId: BlogId) {
+    return this.blogsRepository
+      .createQueryBuilder()
+      .delete()
+      .where("id = :id", { id: blogId })
+      .execute()
   }
 }

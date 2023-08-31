@@ -3,9 +3,11 @@ import { IsDateString } from "class-validator";
 import { BlogId, UserId } from "src/types/common.type";
 
 export class BlogResponseDto {
-  @ApiProperty()
+  @ApiProperty({
+    example: 125
+  })
   id: BlogId
-  
+
   @ApiProperty()
   title: string;
 
