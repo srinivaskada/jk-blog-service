@@ -13,8 +13,19 @@ export class BlogsService {
     private blogsRepository: Repository<Blog>,
   ) {}
 
-  findAll(limit: number, page: number): Promise<Blog[]> {
+  findAll({ createdBy }: {
+    createdBy: number
+  }, {limit, page} : {
+    limit: number,
+    page: number
+  }): Promise<Blog[]> {
     return this.blogsRepository.find({
+      where: {
+        createdBy
+      },
+      order: {
+        createdAt: 'DESC'
+      },
       take: limit,
       skip: (page-1) * limit
     });
