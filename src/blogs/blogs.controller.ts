@@ -14,6 +14,7 @@ import {
   Query,
   Req,
   Res,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
@@ -25,6 +26,8 @@ import { EntityCreated } from 'src/shared/dto/entity-created.dto'
 import { BlogRequestDto } from './dto/blog-request.dto'
 import { PaginatedBlogsResponseDto } from './dto/paginated-blogs-response.dto'
 import { RequestIdInterceptor } from 'src/shared/interceptors/request-id.interceptor'
+import { JwtAuthGuard } from 'src/auth/gaurds/jwt.gaurd'
+import { AuthorizedCommonRequest } from 'src/shared/dto/common-request.dto'
 
 @ApiTags('Blogs')
 @ApiBearerAuth('JWT-auth')
@@ -42,6 +45,7 @@ export class BlogsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @Header('content-type', 'application/json')
   @ApiHeader({
@@ -64,11 +68,14 @@ export class BlogsController {
     type: PaginatedBlogsResponseDto,
   })
   async getAllBlogs(
-    @Req() req: Request & { requestId: string },
+    @Req() req: Request & AuthorizedCommonRequest,
     @Res() res: Response,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
+    this.logger.log('auth user', {
+      user: req.user
+    })
     let requestId = req.requestId
     const [
       blogs,
@@ -134,6 +141,7 @@ export class BlogsController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @Header('content-type', 'application/json')
   @ApiHeader({

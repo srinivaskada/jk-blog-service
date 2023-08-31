@@ -4,3 +4,9 @@ export enum SocialAccountType {
   Google = 'google',
   Facebook = 'facebook'
 }
+
+export type JwtPayloadUser = {
+  sub: number;
+  id: number;
+  email: string;
+};
