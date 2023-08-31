@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Blog } from './entities/blog.entity';
 import { BlogRequestDto } from './dto/blog-request.dto';
-import { BlogId } from 'src/types/common.type';
+import { BlogId, UserId } from 'src/types/common.type';
 
 @Injectable()
 export class BlogsService {
@@ -13,15 +13,32 @@ export class BlogsService {
     private blogsRepository: Repository<Blog>,
   ) {}
 
-  findAll(limit: number, page: number): Promise<Blog[]> {
+  findAll({ createdBy }: {
+    createdBy: number
+  }, {limit, page} : {
+    limit: number,
+    page: number
+  }): Promise<Blog[]> {
     return this.blogsRepository.find({
+      where: {
+        createdBy
+      },
+      order: {
+        createdAt: 'DESC'
+      },
       take: limit,
       skip: (page-1) * limit
     });
   }
 
-  countAll(): Promise<number> {
-    return this.blogsRepository.count()
+  countAll({
+    createdBy
+  }: { createdBy: number}): Promise<number> {
+    return this.blogsRepository.count({
+      where: {
+        createdBy
+      }
+    })
   }
 
   findByTitle(title: string): Promise<Blog> {
@@ -40,16 +57,37 @@ export class BlogsService {
     })
   }
 
-  async createBlog(blog: BlogRequestDto, requestId: string) {
-    const result = await this.blogsRepository.insert({
+  async createBlog(blog: BlogRequestDto, createdBy: UserId, requestId: string) {
+    const newBlog = this.blogsRepository.create({
       title: blog.title,
       description: blog.description,
+      createdBy
     })
+    await this.blogsRepository.save(newBlog)
     this.logger.log('New blog created successfully', {
       requestId,
       blog,
-      result
+      newBlog
     })
-    return result.identifiers[0].id as number
+    return newBlog
+  }
+
+  updateBlog(blogId: BlogId, blog: Partial<Blog>) {
+    return this.blogsRepository
+      .createQueryBuilder()
+      .update({
+        title: blog.title,
+        description: blog.description
+      } as Partial<Blog>)
+      .where("id = :id", { id: blogId })
+      .execute()
+  }
+
+  deleteBlog(blogId: BlogId) {
+    return this.blogsRepository
+      .createQueryBuilder()
+      .delete()
+      .where("id = :id", { id: blogId })
+      .execute()
   }
 }

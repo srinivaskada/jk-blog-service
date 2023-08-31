@@ -1,12 +1,21 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDateString } from "class-validator";
+import { BlogId, UserId } from "src/types/common.type";
 
 export class BlogResponseDto {
+  @ApiProperty({
+    example: 125
+  })
+  id: BlogId
+
   @ApiProperty()
   title: string;
 
   @ApiProperty()
   description: string;
+
+  @ApiProperty()
+  createdBy: UserId
 
   @ApiProperty({
     format: 'date-time'

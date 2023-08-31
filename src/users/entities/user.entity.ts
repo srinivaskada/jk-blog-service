@@ -1,19 +1,22 @@
-import { BlogId, UserId } from 'src/types/common.type';
+import { SocialAccountType, UserId } from 'src/types/common.type';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('blog')
-export class Blog {
+@Entity('user')
+export class User {
   @PrimaryGeneratedColumn()
-  id: BlogId;
+  id: UserId;
 
   @Column()
-  title: string;
+  email: string;
 
   @Column()
-  description: string;
+  name: string;
 
   @Column()
-  createdBy: UserId
+  socialAccountType: SocialAccountType
+
+  @Column()
+  socialAccountId: string
 
   @CreateDateColumn({
     type: 'timestamp'
