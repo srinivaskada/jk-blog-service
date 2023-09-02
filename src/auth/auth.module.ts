@@ -10,6 +10,7 @@ import { User } from 'src/users/entities/user.entity';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([
