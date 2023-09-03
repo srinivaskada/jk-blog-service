@@ -15,7 +15,6 @@ import {
   Put,
   Query,
   Req,
-  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
@@ -24,7 +23,6 @@ import { randomUUID } from 'crypto'
 import { Request, Response } from 'express'
 import { REQUEST_ID_HEADER } from 'src/shared/constants'
 import { BlogsService } from './blogs.service'
-import { EntityCreated } from 'src/shared/dto/entity-created.dto'
 import { BlogRequestDto } from './dto/blog-request.dto'
 import { PaginatedBlogsResponseDto } from './dto/paginated-blogs-response.dto'
 import { RequestIdInterceptor } from 'src/shared/interceptors/request-id.interceptor'
