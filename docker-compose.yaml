@@ -1,0 +1,29 @@
+version: '3.3'
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_HOST: 'mysql'
+      DATABASE_USERNAME: 'srinivas'
+      DATABASE_PASSWORD: 'srinivas625'
+      DATABASE_NAME: 'jk-blogs-service'
+  mysql:
+    image: mysql:5.7.42
+    platform: linux/amd64
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'jk-blogs-service'
+      MYSQL_USER: 'srinivas'
+      MYSQL_PASSWORD: 'srinivas625'
+      MYSQL_ROOT_PASSWORD: 'root'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - jk-mysql:/var/lib/mysql
+# Names our volume
+volumes:
+  jk-mysql:
