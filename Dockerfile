@@ -13,8 +13,9 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+RUN ["chmod", "+x", "docker-entrypoint.sh"]
+
 # Creates a "dist" folder with the production build
 RUN npm run build
 
-# Start the server using the production build
-CMD [ "node", "dist/main.js" ]
+ENTRYPOINT ["sh", "docker-entrypoint.sh"]
